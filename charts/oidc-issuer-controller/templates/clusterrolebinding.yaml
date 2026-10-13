@@ -1,0 +1,17 @@
+{{- if .Values.rbac.create }}
+# Binds the generated ClusterRole (clusterrole.yaml) to the controller ServiceAccount.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "oidc-issuer-controller.fullname" . }}
+  labels:
+    {{- include "oidc-issuer-controller.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "oidc-issuer-controller.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "oidc-issuer-controller.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

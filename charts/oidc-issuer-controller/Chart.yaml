@@ -1,0 +1,10 @@
+apiVersion: v2
+name: oidc-issuer-controller
+description: Publishes Kubernetes ServiceAccount issuer discovery documents and JWKS to an S3-compatible bucket, for workload identity federation with cloud providers.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+home: https://github.com/maarlab-rethinking/oidc-issuer-controller
+sources:
+  - https://github.com/maarlab-rethinking/oidc-issuer-controller
+keywords: [oidc, serviceaccount, issuer, jwks, workload-identity, federation]

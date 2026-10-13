@@ -1,0 +1,64 @@
+image:
+  repository: ghcr.io/maarlab-rethinking/oidc-issuer-controller
+  tag: "" # defaults to .Chart.appVersion
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+# Overrides the name of every resource (default: the release name).
+fullnameOverride: ""
+
+# Leader election makes a second replica a hot standby; one replica is enough.
+replicas: 1
+
+controller:
+  # How often every issuer is re-read and re-published. Bounds how long a rotated signing
+  # key takes to reach the public host.
+  resyncPeriod: 5m
+  # Retry interval while an issuer waits on a Secret, its cluster or its public host.
+  waitPeriod: 1m
+  # Upper bound for the requests of one reconcile.
+  operationTimeout: 2m
+  # zap log level: debug, info, error.
+  logLevel: info
+  extraArgs: []
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+podAnnotations: {}
+priorityClassName: ""
+
+# Install the CRD with the chart (set false if managed separately).
+installCRD: true
+
+# Create the ClusterRole (generated from +kubebuilder:rbac markers), its binding, the
+# namespaced Role for leader election and the Secret-reading Roles below. Set false to
+# bring your own.
+rbac:
+  create: true
+  # Grant `get` on every Secret of the namespaces in secretNamespaces. Set false to grant
+  # nothing here and give the controller each Secret by name instead, with a Role per
+  # ServiceAccountIssuer (docs/operations.md): the right choice when those namespaces hold
+  # Secrets the controller has no business reading, such as Cluster API's, where every
+  # cluster's CA keys live next to its kubeconfig.
+  namespacedSecretAccess: true
+  # Namespaces whose Secrets the controller may `get`: one Role and RoleBinding each.
+  # Secret access is never cluster-wide, so list every namespace that holds
+  # ServiceAccountIssuer objects or the kubeconfig Secrets they read. Empty means the
+  # release namespace only.
+  secretNamespaces: []
+
+serviceAccount:
+  create: true
+  # Defaults to the full name.
+  name: ""
+  annotations: {}
