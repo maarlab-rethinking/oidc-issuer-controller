@@ -6,6 +6,8 @@ All notable changes are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-14
+
 ### Added
 - `ServiceAccountIssuer`: publishes a cluster's ServiceAccount issuer discovery document and JWKS
   to an S3-compatible bucket served on the issuer's public host, reading the cluster either with
@@ -18,3 +20,6 @@ All notable changes are recorded here. The format follows
   `rbac.namespacedSecretAccess=false` for Secrets granted by name.
 - Refusal of kubeconfigs with exec or auth-provider plugins, file paths, a proxy, impersonation,
   plain HTTP or disabled TLS verification (`KubeconfigUnsafe`).
+
+[Unreleased]: https://github.com/maarlab-rethinking/oidc-issuer-controller/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/maarlab-rethinking/oidc-issuer-controller/releases/tag/v0.1.0
