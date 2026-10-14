@@ -6,6 +6,7 @@ CONTROLLER_TOOLS_VERSION ?= v0.22.0
 GOLANGCI_LINT_VERSION ?= v2.14.0
 SETUP_ENVTEST_VERSION ?= v0.25.2
 GOVULNCHECK_VERSION ?= v1.9.0
+CRD_REF_DOCS_VERSION ?= v0.3.0
 # Kubernetes version of the envtest control plane (kube-apiserver + etcd).
 ENVTEST_K8S_VERSION ?= 1.37.0
 
@@ -14,6 +15,7 @@ CONTROLLER_GEN := $(LOCALBIN)/controller-gen-$(CONTROLLER_TOOLS_VERSION)
 GOLANGCI_LINT := $(LOCALBIN)/golangci-lint-$(GOLANGCI_LINT_VERSION)
 SETUP_ENVTEST := $(LOCALBIN)/setup-envtest-$(SETUP_ENVTEST_VERSION)
 GOVULNCHECK := $(LOCALBIN)/govulncheck-$(GOVULNCHECK_VERSION)
+CRD_REF_DOCS := $(LOCALBIN)/crd-ref-docs-$(CRD_REF_DOCS_VERSION)
 
 CHART := charts/oidc-issuer-controller
 GENDIR := .gen
@@ -64,6 +66,15 @@ manifests: $(CONTROLLER_GEN) ## CRD + RBAC ClusterRole -> chart templates (gener
 	  echo '{{- end }}'; \
 	} > $(CHART)/templates/clusterrole.yaml
 	@rm -rf $(GENDIR)
+
+# The API reference is generated from the Go types and their doc comments, so the field
+# documentation lives once, on the field.
+.PHONY: api-docs
+api-docs: $(CRD_REF_DOCS)
+	$(CRD_REF_DOCS) --source-path=./api/v1alpha1 --config=hack/crd-ref-docs.yaml --renderer=markdown --output-path=docs/api.md
+	@# crd-ref-docs ends the file with blank lines, which end-of-file-fixer trims: without
+	@# this the generator and the hook would rewrite each other's output on every run.
+	@printf '%s\n' "$$(cat docs/api.md)" > docs/api.md.tmp && mv docs/api.md.tmp docs/api.md
 
 .PHONY: fmt
 fmt:
@@ -125,6 +136,9 @@ $(GOLANGCI_LINT): | $(LOCALBIN)
 
 $(SETUP_ENVTEST): | $(LOCALBIN)
 	$(call go-install-tool,$@,sigs.k8s.io/controller-runtime/tools/setup-envtest,$(SETUP_ENVTEST_VERSION))
+
+$(CRD_REF_DOCS): | $(LOCALBIN)
+	$(call go-install-tool,$@,github.com/elastic/crd-ref-docs,$(CRD_REF_DOCS_VERSION))
 
 $(GOVULNCHECK): | $(LOCALBIN)
 	$(call go-install-tool,$@,golang.org/x/vuln/cmd/govulncheck,$(GOVULNCHECK_VERSION))
