@@ -114,6 +114,6 @@ make generate manifests api-docs  # after touching api/ or an RBAC marker; CI fa
 make docker                       # build the image
 ```
 
-## Licence
+## License
 
-Apache-2.0. Maintained by Maarlab Rethinking.
+Apache-2.0, see [LICENSE](LICENSE). Maintained by Maarlab Rethinking.
