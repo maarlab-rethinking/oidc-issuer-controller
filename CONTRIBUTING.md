@@ -27,6 +27,13 @@ the controller inside a manager. Neither talks to a real API server's discovery 
 touching how documents are read is worth a run in kind, which is how the API server's 406 on a JWKS
 requested without `application/jwk-set+json` was found.
 
+CI builds with the newest patch release of the Go minor in `GO_VERSION` (`.github/workflows/`), not
+with the `go` directive of `go.mod`, which is only the minimum and which nothing bumps when a patch
+release fixes the standard library. govulncheck runs on every push and daily, so a vulnerability
+published in Go or a dependency turns it red without a push. Dependabot proposes module, action and
+base image updates weekly; raise `GO_VERSION` with the Dockerfile's `golang` image when Go moves to a
+new minor.
+
 ## Documentation is part of the change
 
 Knowledge that exists only in a conversation, a pull request or someone's head does not exist. A

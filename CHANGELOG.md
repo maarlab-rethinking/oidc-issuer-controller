@@ -6,6 +6,10 @@ All notable changes are recorded here. The format follows
 
 ## [Unreleased]
 
+### Changed
+- CI builds with the newest patch release of Go 1.27 instead of the `go` directive, and
+  govulncheck also runs daily.
+
 ## [0.1.0] - 2026-10-14
 
 ### Added
