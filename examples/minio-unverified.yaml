@@ -1,0 +1,23 @@
+# A bucket on MinIO, which needs path-style addressing, behind a host the controller cannot reach:
+# the public URLs are not checked, so Ready means "published", not "served".
+apiVersion: oidc.maarlab.dev/v1alpha1
+kind: ServiceAccountIssuer
+metadata:
+  name: lab
+  namespace: oidc-issuer
+spec:
+  issuer: https://oidc.lab.example.com/lab
+  verifyServed: false
+  source:
+    local: {}
+  destination:
+    cacheControl: max-age=60
+    s3:
+      endpoint: http://minio.storage.svc:9000
+      region: us-east-1
+      bucket: oidc-issuers
+      forcePathStyle: true
+      credentials:
+        name: minio-issuers
+        accessKeyIDKey: AWS_ACCESS_KEY_ID
+        secretAccessKeyKey: AWS_SECRET_ACCESS_KEY

@@ -1,0 +1,21 @@
+# A cluster created by Cluster API, read through the <cluster>-kubeconfig Secret it keeps in the
+# Cluster's namespace. The ServiceAccountIssuer has to live in that namespace too, and the chart's
+# rbac.secretNamespaces has to list it.
+apiVersion: oidc.maarlab.dev/v1alpha1
+kind: ServiceAccountIssuer
+metadata:
+  name: cluster-a
+  namespace: capi-clusters
+spec:
+  issuer: https://oidc.example.com/cluster-a
+  source:
+    kubeconfig:
+      secretRef:
+        name: cluster-a-kubeconfig
+  destination:
+    s3:
+      endpoint: https://<account-id>.r2.cloudflarestorage.com
+      region: auto
+      bucket: oidc-issuers
+      credentials:
+        name: issuer-bucket

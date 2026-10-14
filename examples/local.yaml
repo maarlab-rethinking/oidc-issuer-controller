@@ -1,0 +1,18 @@
+# The cluster the controller runs in, read with the controller's own ServiceAccount.
+# The bucket is served at the root of https://oidc.example.com.
+apiVersion: oidc.maarlab.dev/v1alpha1
+kind: ServiceAccountIssuer
+metadata:
+  name: management
+  namespace: oidc-issuer
+spec:
+  issuer: https://oidc.example.com/management
+  source:
+    local: {}
+  destination:
+    s3:
+      endpoint: https://<account-id>.r2.cloudflarestorage.com
+      region: auto
+      bucket: oidc-issuers
+      credentials:
+        name: issuer-bucket
