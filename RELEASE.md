@@ -7,11 +7,21 @@ A release is a signed tag. Everything else follows from it.
    start a new empty `[Unreleased]`. Anything removed from the API is listed with its replacement.
 3. **Chart versions.** In `charts/oidc-issuer-controller/Chart.yaml` set `version` and `appVersion`
    to the release. The image tag defaults to `appVersion`.
-4. **Commit and tag.** One commit, `chore(release): vX.Y.Z`, then a signed annotated tag:
-   `git tag -s vX.Y.Z -m "vX.Y.Z"`. Push the commit and the tag.
-5. **The workflow does the rest.** `release.yml` builds the multi-arch image, pushes it to
-   `ghcr.io/maarlab-rethinking/oidc-issuer-controller` and creates the GitHub Release. The chart is
-   consumed from the tag in this repository.
+4. **Release commit.** One commit, `chore(release): vX.Y.Z`, merged through a pull request like
+   any other change.
+5. **Tag.** On the merge commit that brings it to `main`, whose tree is what CI tested there, a
+   signed annotated tag: `git tag -s vX.Y.Z -m "vX.Y.Z"`, then push the tag.
+6. **The workflow does the rest.** `release.yml` refuses a tag the chart is not at, builds the
+   multi-arch image with an SBOM and SLSA provenance, signs it with Sigstore keyless signing, pushes
+   it to `ghcr.io/maarlab-rethinking/oidc-issuer-controller` and creates the GitHub Release with the
+   verification command in its notes. The chart is consumed from the tag in this repository.
+7. **Verify** what it published, with Cosign 3 or later (Cosign 2 cannot read its bundle format):
+
+   ```console
+   cosign verify ghcr.io/maarlab-rethinking/oidc-issuer-controller:X.Y.Z \
+     --certificate-identity-regexp 'https://github.com/maarlab-rethinking/oidc-issuer-controller/' \
+     --certificate-oidc-issuer https://token.actions.githubusercontent.com
+   ```
 
 ## Versioning
 
