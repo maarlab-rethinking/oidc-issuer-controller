@@ -10,7 +10,8 @@ For anything beyond a small fix, open an issue first so the shape can be agreed 
 ## Developer Certificate of Origin
 
 Every commit must carry a `Signed-off-by` trailer (`git commit -s`), certifying the
-[Developer Certificate of Origin](https://developercertificate.org/).
+[Developer Certificate of Origin](https://developercertificate.org/). Dependabot's own commits are
+exempt, by author.
 
 ## Working on the code
 
@@ -44,8 +45,24 @@ opening a pull request, search the docs for wording the change made stale.
 
 ## Commits
 
-- Conventional Commits (`feat`, `fix`, `perf`, `refactor`, `docs`, `ci`, `chore`), in English.
+- Conventional Commits (`feat`, `fix`, `perf`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`),
+  in English.
 - One logical change per commit, each of which builds and passes its tests on its own.
 - The message explains the reason and the consequence, not just the change.
 - No correction commits on an unmerged branch: fix the commit that introduced the problem
   (`git commit --fixup`, `git rebase --autosquash`) rather than stacking a "fix previous" on top.
+
+CI checks the header, the sign-off and the absence of `fixup!` commits on every commit of a pull
+request.
+
+## Pull requests
+
+Pull requests are merged with a merge commit. Nothing is squashed or rebased on the way in, so your
+commits reach `main` as you wrote them, with their hashes and their signatures; sign them
+(`git commit -S`) if you can. The branch itself is what gets reviewed: before asking for a review,
+and after addressing one, rebase it on `main`, fold every correction into the commit it corrects,
+and force-push.
+
+The merge commit takes the pull request's title and description, so `git log --first-parent main`
+reads as one entry per pull request. Write the title as a Conventional Commits header, and describe
+what changes for a user, what you verified and how.
