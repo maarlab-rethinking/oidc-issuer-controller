@@ -67,8 +67,8 @@ type LocalSource struct{}
 // KubeconfigSource reads a remote cluster with a kubeconfig stored in a Secret.
 type KubeconfigSource struct {
 	// SecretRef is the Secret, in the ServiceAccountIssuer's namespace, holding the
-	// kubeconfig. Its first cluster and first user are used; the user must be allowed to
-	// get /.well-known/openid-configuration and /openid/v1/jwks.
+	// kubeconfig. Its current context selects the cluster and user; the user must be
+	// allowed to get /.well-known/openid-configuration and /openid/v1/jwks.
 	SecretRef SecretKeyRef `json:"secretRef"`
 }
 

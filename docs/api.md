@@ -63,7 +63,7 @@ _Appears in:_
 
 | Field | Description | Default | Validation |
 | --- | --- | --- | --- |
-| `secretRef` _[SecretKeyRef](#secretkeyref)_ | SecretRef is the Secret, in the ServiceAccountIssuer's namespace, holding the<br />kubeconfig. Its first cluster and first user are used; the user must be allowed to<br />get /.well-known/openid-configuration and /openid/v1/jwks. |  |  |
+| `secretRef` _[SecretKeyRef](#secretkeyref)_ | SecretRef is the Secret, in the ServiceAccountIssuer's namespace, holding the<br />kubeconfig. Its current context selects the cluster and user; the user must be<br />allowed to get /.well-known/openid-configuration and /openid/v1/jwks. |  |  |
 
 
 #### LocalSource
